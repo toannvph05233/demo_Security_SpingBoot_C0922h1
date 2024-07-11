@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <!-- theme meta -->
+    <meta name="theme-name" content="quixlab"/>
+
+    <title>Admin Management Dashboard</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+    <!-- Pignose Calender -->
+    <link href="/plugins/pg-calendar/css/pignose.calendar.min.css" rel="stylesheet">
+    <!-- Chartist -->
+    <link rel="stylesheet" href="/plugins/chartist/css/chartist.min.css">
+    <link rel="stylesheet" href="/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css">
+    <!-- Custom Stylesheet -->
+    <link href="/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!--**********************************
+    Main wrapper start
+***********************************-->
+<div id="main-wrapper">
+
+    <div class="nav-header">
+        <div class="brand-logo">
+            <!-- Logo can be added here -->
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="header-content clearfix">
+            <div class="nav-control">
+                <div class="hamburger">
+                    <span class="toggle-icon"><i class="icon-menu"></i></span>
+                </div>
+            </div>
+            <div class="header-left">
+                <div class="input-group icons">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-transparent border-0 pr-2 pr-sm-3" id="basic-addon1"><i
+                                class="mdi mdi-magnify"></i></span>
+                    </div>
+                    <form action="/admin/search" method="get" class="row">
+                        <input name="search" type="search" class="form-control col-8" placeholder="Search"
+                               aria-label="Search">
+                        <button class="btn-primary col-4" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+            <div class="header-right">
+                <ul class="clearfix">
+                    <li class="icons dropdown d-none d-md-flex">
+                        <a href="javascript:void(0)" class="log-user" data-toggle="dropdown">
+                            <span th:text="${session.account.username}"></span> <i class="fa fa-angle-down f-s-14"
+                                                                                   aria-hidden="true"></i>
+                        </a>
+                    </li>
+                    <li class="icons dropdown">
+                        <div class="user-img c-pointer position-relative" data-toggle="dropdown">
+                            <span class="activity active"></span>
+                            <img th:src="${session.account.avatar}" height="40" width="40" alt="">
+
+                        </div>
+                        <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
+                            <div class="dropdown-content-body">
+                                <ul>
+                                    <li><a href="app-profile.html"><i class="icon-user"></i> <span>Profile</span></a>
+                                    </li>
+                                    <li><a href="javascript:void(0)"><i class="icon-envelope-open"></i>
+                                        <span>Inbox</span></a></li>
+                                    <hr class="my-2">
+                                    <li><a href="page-lock.html"><i class="icon-lock"></i> <span>Lock Screen</span></a>
+                                    </li>
+                                    <li><a href="/login"><i class="icon-key"></i> <span>Logout</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="nk-sidebar">
+        <div class="nk-nav-scroll">
+            <ul class="metismenu" id="menu">
+                <li class="nav-label">Dashboard</li>
+                <li>
+                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+                        <i class="icon-user menu-icon"></i><span class="nav-text">Accounts</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        <li><a href="/admin/accounts">All Accounts</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+                        <i class="icon-note menu-icon"></i><span class="nav-text">Blogs</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        <li><a href="/admin/blogs">All Blogs</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+                        <i class="icon-car menu-icon"></i><span class="nav-text">Cars</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        <li><a href="/admin/cars">All Cars</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+                        <i class="icon-ban menu-icon"></i><span class="nav-text">Violations</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        <li><a href="/admin/violations">All Violations</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content-body">
+        <div class="container-fluid mt-3">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="accounts-tab" data-toggle="tab" href="#accounts" role="tab" aria-controls="accounts" aria-selected="true">Accounts</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="blogs-tab" data-toggle="tab" href="#blogs" role="tab" aria-controls="blogs" aria-selected="false">Blogs</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="cars-tab" data-toggle="tab" href="#cars" role="tab" aria-controls="cars" aria-selected="false">Cars</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="violations-tab" data-toggle="tab" href="#violations" role="tab" aria-controls="violations" aria-selected="false">Violations</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="accounts" role="tabpanel" aria-labelledby="accounts-tab">
+                                    <h3>All Accounts</h3>
+                                    <br>
+                                    <table class="table table-xs mb-0">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Username</th>
+                                            <th>Details</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="account : ${accounts}">
+                                            <td th:text="${account.id}">1</td>
+                                            <td th:text="${account.username}">Username</td>
+                                            <td><a th:href="@{/admin/account/{id}(id=${account.id})}">View Details</a></td>
+                                            <td>
+                                                <a th:href="@{/admin/account/edit/{id}(id=${account.id})}" class="btn btn-primary">Edit</a>
+                                                <a th:href="@{/admin/account/delete/{id}(id=${account.id})}" class="btn btn-danger">Delete</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="blogs" role="tabpanel" aria-labelledby="blogs-tab">
+                                    <h3>All Blogs</h3>
+                                    <br>
+                                    <table class="table table-xs mb-0">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Title</th>
+                                            <th>Details</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="blog : ${blogs}">
+                                            <td th:text="${blog.id}">1</td>
+                                            <td th:text="${blog.title}">Blog Title</td>
+                                            <td><a th:href="@{/admin/blog/{id}(id=${blog.id})}">View Details</a></td>
+                                            <td>
+                                                <a th:href="@{/admin/blog/edit/{id}(id=${blog.id})}" class="btn btn-primary">Edit</a>
+                                                <a th:href="@{/admin/blog/delete/{id}(id=${blog.id})}" class="btn btn-danger">Delete</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="cars" role="tabpanel" aria-labelledby="cars-tab">
+                                    <h3>All Cars</h3>
+                                    <br>
+                                    <table class="table table-xs mb-0">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>License Plate</th>
+                                            <th>Details</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="car : ${cars}">
+                                            <td th:text="${car.id}">1</td>
+                                            <td th:text="${car.licensePlate}">License Plate</td>
+                                            <td><a th:href="@{/admin/car/{id}(id=${car.id})}">View Details</a></td>
+                                            <td>
+                                                <a th:href="@{/admin/car/edit/{id}(id=${car.id})}" class="btn btn-primary">Edit</a>
+                                                <a th:href="@{/admin/car/delete/{id}(id=${car.id})}" class="btn btn-danger">Delete</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="violations" role="tabpanel" aria-labelledby="violations-tab">
+                                    <h3>All Violations</h3>
+                                    <br>
+                                    <table class="table table-xs mb-0">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Behavior</th>
+                                            <th>Details</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="violation : ${violations}">
+                                            <td th:text="${violation.id}">1</td>
+                                            <td th:text="${violation.behavior}">Behavior</td>
+                                            <td><a th:href="@{/admin/violation/{id}(id=${violation.id})}">View Details</a></td>
+                                            <td>
+                                                <a th:href="@{/admin/violation/edit/{id}(id=${violation.id})}" class="btn btn-primary">Edit</a>
+                                                <a th:href="@{/admin/violation/delete/{id}(id=${violation.id})}" class="btn btn-danger">Delete</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #/ container -->
+    </div>
+
+    <div class="footer">
+        <div class="copyright">
+            <p>Copyright &copy; Designed & Developed by <a href="https://themeforest.net/user/quixlab">Quixlab</a> 2018
+            </p>
+        </div>
+    </div>
+</div>
+
+<!--**********************************
+    Scripts
+***********************************-->
+<script src="/plugins/common/common.min.js"></script>
+<script src="/js/custom.min.js"></script>
+<script src="/js/settings.js"></script>
+<script src="/js/gleek.js"></script>
+<script src="/js/styleSwitcher.js"></script>
+
+<!-- Chartjs -->
+<script src="/plugins/chart.js/Chart.bundle.min.js"></script>
+<!-- Circle progress -->
+<script src="/plugins/circle-progress/circle-progress.min.js"></script>
+<!-- Datamap -->
+<script src="/plugins/d3v3/index.js"></script>
+<script src="/plugins/topojson/topojson.min.js"></script>
+<script src="/plugins/datamaps/datamaps.world.min.js"></script>
+<!-- Morrisjs -->
+<script src="/plugins/raphael/raphael.min.js"></script>
+<script src="/plugins/morris/morris.min.js"></script>
+<!-- Pignose Calender -->
+<script src="/plugins/moment/moment.min.js"></script>
+<script src="/plugins/pg-calendar/js/pignose.calendar.min.js"></script>
+<!-- ChartistJS -->
+<script src="/plugins/chartist/js/chartist.min.js"></script>
+<script src="/plugins/chartist-plugin-tooltips/js/chartist-plugin-tooltip.min.js"></script>
+
+<script src="/js/dashboard/dashboard-1.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Homepage</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .blog-card {
+            margin-bottom: 30px;
+        }
+
+        .blog-card img {
+            max-height: 200px;
+            object-fit: cover;
+        }
+
+        .blog-card-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .blog-card-content {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .blog-card-category {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .header {
+            background-color: #343a40;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .pagination {
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Tra cứu vi phạm</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Tra cứu <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/blogs">Tin tức</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Đăng nhập</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="header">
+    <h1>Blog Homepage</h1>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-4 col-md-6" th:each="blog : ${blogs.content}">
+            <div class="card blog-card">
+                <img class="card-img-top" th:src="${blog.img}" alt="Blog image">
+                <div class="card-body">
+                    <h5 class="card-title blog-card-title" th:text="${blog.title}">Blog Title</h5>
+                    <p class="card-text blog-card-content" th:text="${#strings.abbreviate(blog.content, 100)}">Blog content...</p>
+                    <p class="blog-card-category" th:text="${blog.category.name}">Category Name</p>
+                    <a th:href="@{/blog/{id}(id=${blog.id})}" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${blogs.pageable.pageNumber == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{/blogs(page=${blogs.pageable.pageNumber - 1})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, blogs.totalPages - 1)}"
+                th:classappend="${blogs.pageable.pageNumber == i} ? 'active'">
+                <a class="page-link" th:href="@{/blogs(page=${i})}" th:text="${i + 1}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${blogs.pageable.pageNumber + 1 >= blogs.totalPages} ? 'disabled'">
+                <a class="page-link" th:href="@{/blogs(page=${blogs.pageable.pageNumber + 1})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <div class="container">
+        <p>&copy; 2024 Your Company. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a></p>
+    </div>
+</div>
+<!-- End Footer -->
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

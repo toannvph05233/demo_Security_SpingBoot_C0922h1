@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Details</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+
+    .blog-header {
+      background-color: #343a40;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    .blog-header h1 {
+      margin: 0;
+    }
+
+    .blog-content {
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .blog-content img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+    }
+
+    .blog-content h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    .blog-content .category {
+      font-size: 1rem;
+      color: #6c757d;
+      margin-bottom: 20px;
+    }
+
+    .blog-content .content {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .back-button {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="blog-header">
+  <h1>Blog Details</h1>
+</div>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 blog-content">
+      <h2 th:text="${blog.title}">Blog Title</h2>
+      <p class="category" th:text="${blog.category.name}">Category Name</p>
+      <img th:src="${blog.img}" alt="Blog Image">
+      <div class="content" th:utext="${blog.content}">
+        Blog Content...
+      </div>
+      <a href="/blogs" class="btn btn-secondary back-button">Back to Blogs</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

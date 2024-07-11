@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <meta name="theme-name" content="quixlab"/>
+    <title>Car Details</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+    <link href="/plugins/pg-calendar/css/pignose.calendar.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/plugins/chartist/css/chartist.min.css">
+    <link rel="stylesheet" href="/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css">
+    <link href="/css/style.css" rel="stylesheet">
+    <style>
+        .emp-profile {
+            padding: 3%;
+            margin-top: 3%;
+            margin-bottom: 3%;
+            border-radius: 0.5rem;
+            background: #fff;
+        }
+
+        .profile-img {
+            text-align: center;
+        }
+
+        .profile-img img {
+            width: 70%;
+            height: 100%;
+        }
+
+        .profile-head h5 {
+            color: #333;
+        }
+
+        .profile-head h6 {
+            color: #0062cc;
+        }
+
+        .profile-edit-btn {
+            border: none;
+            border-radius: 1.5rem;
+            width: 70%;
+            padding: 2%;
+            font-weight: 600;
+            color: #6c757d;
+            cursor: pointer;
+        }
+
+        .proile-rating {
+            font-size: 12px;
+            color: #818182;
+            margin-top: 5%;
+        }
+
+        .proile-rating span {
+            color: #495057;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .profile-head .nav-tabs {
+            margin-bottom: 5%;
+        }
+
+        .profile-head .nav-tabs .nav-link {
+            font-weight: 600;
+            border: none;
+        }
+
+        .profile-head .nav-tabs .nav-link.active {
+            border: none;
+            border-bottom: 2px solid #0062cc;
+        }
+
+        .profile-work {
+            padding: 14%;
+            margin-top: -15%;
+        }
+
+        .profile-work p {
+            font-size: 12px;
+            color: #818182;
+            font-weight: 600;
+            margin-top: 10%;
+        }
+
+        .profile-work a {
+            text-decoration: none;
+            color: #495057;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .profile-work ul {
+            list-style: none;
+        }
+
+        .profile-tab label {
+            font-weight: 600;
+        }
+
+        .profile-tab p {
+            font-weight: 600;
+            color: #0062cc;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<!--*******************
+    Preloader start
+********************-->
+<div id="preloader">
+    <div class="loader">
+        <svg class="circular" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10"/>
+        </svg>
+    </div>
+</div>
+<!--*******************
+    Preloader end
+********************-->
+
+
+<!--**********************************
+    Main wrapper start
+***********************************-->
+<div id="main-wrapper">
+
+    <div class="nav-header">
+        <div class="brand-logo">
+            <!-- Logo can be added here -->
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="header-content clearfix">
+            <div class="nav-control">
+                <div class="hamburger">
+                    <span class="toggle-icon"><i class="icon-menu"></i></span>
+                </div>
+            </div>
+            <div class="header-left">
+                <div class="input-group icons">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-transparent border-0 pr-2 pr-sm-3" id="basic-addon1"><i
+                                class="mdi mdi-magnify"></i></span>
+                    </div>
+                    <form action="/students" method="get" class="row">
+                        <input name="search" type="search" class="form-control col-8" placeholder="Search Students"
+                               aria-label="Search Students">
+                        <button class="btn-primary col-4" type="submit">Search</button>
+                    </form>
+
+                </div>
+            </div>
+            <div class="header-right">
+                <ul class="clearfix">
+                    <li class="icons dropdown d-none d-md-flex">
+                        <a href="javascript:void(0)" class="log-user" data-toggle="dropdown">
+                            <span th:text="${session.account.username}"></span> <i class="fa fa-angle-down f-s-14"
+                                                                                   aria-hidden="true"></i>
+                        </a>
+                    </li>
+                    <li class="icons dropdown">
+                        <div class="user-img c-pointer position-relative" data-toggle="dropdown">
+                            <span class="activity active"></span>
+                            <img th:src="@{${session.account.avatar}}" height="40" width="40" alt="">
+                        </div>
+                        <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
+                            <div class="dropdown-content-body">
+                                <ul>
+                                    <li><a href="app-profile.html"><i class="icon-user"></i> <span>Profile</span></a>
+                                    </li>
+                                    <li><a href="javascript:void(0)"><i class="icon-envelope-open"></i>
+                                        <span>Inbox</span></a></li>
+                                    <hr class="my-2">
+                                    <li><a href="page-lock.html"><i class="icon-lock"></i> <span>Lock Screen</span></a>
+                                    </li>
+                                    <li><a href="/login"><i class="icon-key"></i> <span>Logout</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="nk-sidebar">
+        <div class="nk-nav-scroll">
+            <div>
+                <ul class="metismenu" id="menu">
+                    <li class="nav-label">Dashboard CSGT</li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+                            <i class="icon-user menu-icon"></i><span class="nav-text">Cart</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="/gt">Tất cả</a></li>
+                            <li><a href="/gt?category=oto">Ô tô</a></li>
+                            <li><a href="/gt?category=xemay">Xe máy</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-body">
+        <div class="container emp-profile">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="profile-img">
+                        <img th:src="@{${car.image}}" alt="" class="fixed-size-img"
+                             style="width: 250px; height: 250px; object-fit: cover;"/>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="profile-head">
+                        <h5>
+                            License Plate: <span th:text="${car.licensePlate}"></span>
+                        </h5>
+                        <h6>
+                            Category: <span th:text="${car.category}"></span>
+                        </h6>
+                        <p class="proile-rating">Status: <span th:text="${car.status}"></span></p>
+                        <p class="proile-rating">Date: <span th:text="${car.date}"></span></p>
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                                   aria-controls="home" aria-selected="true">Car Details</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!--                <div class="col-md-2">-->
+                <!--                    <button class="profile-edit-btn" name="btnAddMore">Edit Profile</button>-->
+                <!--                </div>-->
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-8">
+                    <div class="tab-content profile-tab" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>License Plate</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p th:text="${car.licensePlate}"></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Category</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p th:text="${car.category}"></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Address</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p th:text="${car.address}"></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Date</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p th:text="${car.date}"></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Status</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p th:text="${car.status}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container emp-profile">
+            <div class="row">
+                <h3 style="color: red">Violation List</h3>
+
+                <button style="margin-left: 50px" type="button" class="btn btn-primary mb-3" id="btnCreateViolate">Create Violate</button>
+
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <div class="tab-content profile-tab">
+                        <hr>
+                        <div th:each="violate : ${violates}">
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <strong>Time:</strong>
+                                </div>
+                                <div class="col-md-9">
+                                    <p th:text="${violate.time}"></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <strong>Behavior:</strong>
+                                </div>
+                                <div class="col-md-9">
+                                    <p th:text="${violate.behavior}"></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <strong>Status:</strong>
+                                </div>
+                                <div class="col-md-9">
+                                    <p th:text="${violate.status}"></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <strong>Address:</strong>
+                                </div>
+                                <div class="col-md-9">
+                                    <p th:text="${violate.address}"></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <strong>Image:</strong>
+                                </div>
+                                <div class="col-md-9">
+                                    <img th:src="@{${violate.image}}" alt="Violate Image" class="fixed-size-img"
+                                         style="width: 250px; height: 250px; object-fit: cover;"/>
+                                </div>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0)" class="btn btn-danger delete-car"
+                                   th:data-id="${violate.id}">Delete</a>
+                                <button style="margin-top: 15px" type="button" class="btn btn-secondary mb-3 ml-3 edit-violate-btn"
+                                        th:data-id="${violate.id}"
+                                        th:data-time="${violate.time}"
+                                        th:data-behavior="${violate.behavior}"
+                                        th:data-status="${violate.status}"
+                                        th:data-address="${violate.address}"
+                                        th:data-image="${violate.image}">Edit Violate</button>
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Create Violate -->
+<div class="modal fade" id="modalCreateViolate" tabindex="-1" role="dialog" aria-labelledby="modalCreateViolateLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCreateViolateLabel">Create Violate</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createViolateForm" action="/violates/create" method="post">
+                    <input type="hidden" id="violateCarId" name="violateCarId" value="">
+                    <div class="form-group">
+                        <label for="violateTime">Time:</label>
+                        <input type="datetime-local" class="form-control" id="violateTime" name="timeV" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="violateBehavior">Behavior:</label>
+                        <input type="text" class="form-control" id="violateBehavior" name="behavior" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="violateStatus">Status:</label>
+                        <input type="text" class="form-control" id="violateStatus" name="status" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="violateAddress">Address:</label>
+                        <textarea class="form-control" id="violateAddress" name="address" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="violateImage">Image URL:</label>
+                        <input type="text" class="form-control" id="violateImage" name="image" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Violate</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Edit Violate -->
+<div class="modal fade" id="modalEditViolate" tabindex="-1" role="dialog" aria-labelledby="modalEditViolateLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditViolateLabel">Edit Violate</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editViolateForm" action="/violates/create" method="post">
+                    <input type="hidden" id="editViolateId" name="id" value="">
+                    <input type="hidden" id="violateCarIdE" name="violateCarId" value="">
+                    <div class="form-group">
+                        <label for="editViolateTime">Time:</label>
+                        <input type="datetime-local" class="form-control" id="editViolateTime" name="timeV" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editViolateBehavior">Behavior:</label>
+                        <input type="text" class="form-control" id="editViolateBehavior" name="behavior" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editViolateStatus">Status:</label>
+                        <input type="text" class="form-control" id="editViolateStatus" name="status" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editViolateAddress">Address:</label>
+                        <textarea class="form-control" id="editViolateAddress" name="address" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editViolateImage">Image URL:</label>
+                        <input type="text" class="form-control" id="editViolateImage" name="image" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Delete -->
+<div class="modal" id="modalDelete">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm Delete</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete ?</p>
+            </div>
+            <div class="modal-footer">
+                <form id="deleteCarForm" action="/violates/delete" method="get">
+                    <input type="hidden" name="idViolate" id="deleteId">
+                    <input type="hidden" name="idCart" id="idCart">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/plugins/common/common.min.js"></script>
+<script src="/js/custom.min.js"></script>
+<script src="/js/settings.js"></script>
+<script src="/js/gleek.js"></script>
+<script src="/js/styleSwitcher.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentUrl = window.location.href;
+        var urlParts = currentUrl.split('/');
+        var idC = urlParts[urlParts.length - 1];
+
+        // Add event listener to all delete-car buttons
+        document.querySelectorAll('.delete-car').forEach(function(button) {
+            button.addEventListener('click', function() {
+                document.getElementById('deleteId').value = this.getAttribute('data-id');
+                document.getElementById('idCart').value = idC;
+                $('#modalDelete').modal('show');
+            });
+        });
+
+        // Modal Create Violate
+        var modalCreateViolate = $('#modalCreateViolate');
+        var createViolateForm = document.getElementById('createViolateForm');
+        var violateCarId = document.getElementById('violateCarId');
+        var violateTime = document.getElementById('violateTime');
+        var violateBehavior = document.getElementById('violateBehavior');
+        var violateStatus = document.getElementById('violateStatus');
+        var violateAddress = document.getElementById('violateAddress');
+        var violateImage = document.getElementById('violateImage');
+
+        // Modal Edit Violate
+        var modalEditViolate = $('#modalEditViolate');
+        var editViolateForm = document.getElementById('editViolateForm');
+        var violateCarIdE = document.getElementById('violateCarIdE');
+        var editViolateId = document.getElementById('editViolateId');
+        var editViolateTime = document.getElementById('editViolateTime');
+        var editViolateBehavior = document.getElementById('editViolateBehavior');
+        var editViolateStatus = document.getElementById('editViolateStatus');
+        var editViolateAddress = document.getElementById('editViolateAddress');
+        var editViolateImage = document.getElementById('editViolateImage');
+
+        // Function to fill data in Edit Violate modal
+        function fillEditViolateModal(id, time, behavior, status, address, image,cartId) {
+            editViolateId.value = id;
+            violateCarIdE.value = cartId;
+            editViolateTime.value = time;
+            editViolateBehavior.value = behavior;
+            editViolateStatus.value = status;
+            editViolateAddress.value = address;
+            editViolateImage.value = image;
+            modalEditViolate.modal('show');
+        }
+
+        // Add event listener to "Edit Violate" buttons
+        document.querySelectorAll('.edit-violate-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var id = this.getAttribute('data-id');
+                var time = this.getAttribute('data-time');
+                var behavior = this.getAttribute('data-behavior');
+                var status = this.getAttribute('data-status');
+                var address = this.getAttribute('data-address');
+                var image = this.getAttribute('data-image');
+                fillEditViolateModal(id, time, behavior, status, address, image, idC);
+            });
+        });
+
+
+        // Event listener for "Create Violate" button click
+        var btnCreateViolate = document.getElementById('btnCreateViolate');
+        btnCreateViolate.addEventListener('click', function() {
+            violateCarId.value = idC;
+            modalCreateViolate.modal('show');
+        });
+
+        // Event listener for "Edit Violate" button click
+        var btnEditViolate = document.getElementById('btnEditViolate');
+        btnEditViolate.addEventListener('click', function() {
+            // Example: Fill with first violate's data
+            var firstViolate = document.querySelector('.edit-violate-btn');
+            var id = firstViolate.getAttribute('data-id');
+            var time = firstViolate.getAttribute('data-time');
+            var behavior = firstViolate.getAttribute('data-behavior');
+            var status = firstViolate.getAttribute('data-status');
+            var address = firstViolate.getAttribute('data-address');
+            var image = firstViolate.getAttribute('data-image');
+            fillEditViolateModal(id, time, behavior, status, address, image);
+        });
+
+        // Add event listener to "Edit" buttons for each violate
+        document.querySelectorAll('.edit-violate-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                fillEditViolateModal(/* pass parameters as needed */);
+            });
+        });
+
+
+
+
+
+    });
+</script>
+
+
+
+</body>
+
+</html>
+
+

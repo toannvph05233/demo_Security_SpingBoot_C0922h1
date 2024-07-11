@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <!-- theme meta -->
+    <meta name="theme-name" content="quixlab"/>
+
+    <title>Quixlab - Bootstrap Admin Dashboard Template by Themefisher.com</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+    <!-- Pignose Calender -->
+    <link href="/plugins/pg-calendar/css/pignose.calendar.min.css" rel="stylesheet">
+    <!-- Chartist -->
+    <link rel="stylesheet" href="/plugins/chartist/css/chartist.min.css">
+    <link rel="stylesheet" href="/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css">
+    <!-- Custom Stylesheet -->
+    <link href="/css/style.css" rel="stylesheet">
+    <style>
+        .emp-profile {
+            padding: 3%;
+            margin-top: 3%;
+            margin-bottom: 3%;
+            border-radius: 0.5rem;
+            background: #fff;
+        }
+
+        .profile-img {
+            text-align: center;
+        }
+
+        .profile-img img {
+            width: 70%;
+            height: 100%;
+        }
+
+        .profile-img .file {
+            position: relative;
+            overflow: hidden;
+            margin-top: -20%;
+            width: 70%;
+            border: none;
+            border-radius: 0;
+            font-size: 15px;
+            background: #212529b8;
+        }
+
+        .profile-img .file input {
+            position: absolute;
+            opacity: 0;
+            right: 0;
+            top: 0;
+        }
+
+        .profile-head h5 {
+            color: #333;
+        }
+
+        .profile-head h6 {
+            color: #0062cc;
+        }
+
+        .profile-edit-btn {
+            border: none;
+            border-radius: 1.5rem;
+            width: 70%;
+            padding: 2%;
+            font-weight: 600;
+            color: #6c757d;
+            cursor: pointer;
+        }
+
+        .proile-rating {
+            font-size: 12px;
+            color: #818182;
+            margin-top: 5%;
+        }
+
+        .proile-rating span {
+            color: #495057;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .profile-head .nav-tabs {
+            margin-bottom: 5%;
+        }
+
+        .profile-head .nav-tabs .nav-link {
+            font-weight: 600;
+            border: none;
+        }
+
+        .profile-head .nav-tabs .nav-link.active {
+            border: none;
+            border-bottom: 2px solid #0062cc;
+        }
+
+        .profile-work {
+            padding: 14%;
+            margin-top: -15%;
+        }
+
+        .profile-work p {
+            font-size: 12px;
+            color: #818182;
+            font-weight: 600;
+            margin-top: 10%;
+        }
+
+        .profile-work a {
+            text-decoration: none;
+            color: #495057;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .profile-work ul {
+            list-style: none;
+        }
+
+        .profile-tab label {
+            font-weight: 600;
+        }
+
+        .profile-tab p {
+            font-weight: 600;
+            color: #0062cc;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<!--*******************
+    Preloader start
+********************-->
+<div id="preloader">
+    <div class="loader">
+        <svg class="circular" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10"/>
+        </svg>
+    </div>
+</div>
+<!--*******************
+    Preloader end
+********************-->
+
+
+<!--**********************************
+    Main wrapper start
+***********************************-->
+<div id="main-wrapper" style="background: burlywood;">
+    <!-- Main Content Start -->
+    <div class="container emp-profile">
+        <div align="center">
+            <br>
+            <h1>THÔNG TIN XE CỦA BẠN</h1>
+            <br>
+            <br>
+        </div>
+        <div align="center" style="width: 500px">
+            <form action="/tracuu" method="get" class="row">
+                <input name="bsx" type="search" class="form-control col-8" placeholder="Tìm biển số xe"
+                       aria-label="Tìm biển số xe">
+                <button class="btn-primary col-4" type="submit">Tìm kiếm</button>
+            </form>
+        </div>
+
+        <br>
+        <hr>
+        <br>
+
+        <div class="row col-12">
+            <div class="col-md-4">
+                <div class="profile-img">
+                    <img th:src="@{${car.image}}" alt="" class="fixed-size-img"
+                         style="width: 250px; height: 250px; object-fit: cover;"/>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="profile-head">
+                    <h5>
+                        Biển số xe: <span th:text="${car.licensePlate}"></span>
+                    </h5>
+                    <h6>
+                        Loại xe: <span th:text="${car.category}"></span>
+                    </h6>
+                    <p class="proile-rating">Trạng thái: <span th:text="${car.status}"></span></p>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                               aria-controls="home" aria-selected="true">Thông tin</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-10">
+                <div class="tab-content profile-tab" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Địa chỉ</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p th:text="${car.address}"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Ngày đăng ký</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p th:text="${car.date}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container emp-profile">
+            <div class="row">
+                <h3 style="color: red">Danh sách vi phạm</h3>
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <div class="tab-content profile-tab">
+                        <hr>
+                        <div th:each="violate : ${violates}">
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <strong>Thời gian:</strong>
+                                </div>
+                                <div class="col-md-9">
+                                    <p th:text="${violate.time}"></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <strong>Hành vi:</strong>
+                                </div>
+                                <div class="col-md-9">
+                                    <p style="color: red" th:text="${violate.behavior}"></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <strong>Trạng thái:</strong>
+                                </div>
+                                <div class="col-md-9">
+                                    <p th:text="${violate.status}"></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <strong>Địa chỉ:</strong>
+                                </div>
+                                <div class="col-md-9">
+                                    <p th:text="${violate.address}"></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <strong>Đội CAGT:</strong>
+                                </div>
+                                <div class="col-md-9">
+                                    <p style="color: #0e4cfd" th:text="${violate.account.getDetection()}"></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <strong>Nơi giải quyết:</strong>
+                                </div>
+                                <div class="col-md-9">
+                                    <p style="color: #00cc66" th:text="${violate.account.getAddressHandle()}"></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <strong>Hình ảnh:</strong>
+                                </div>
+                                <div class="col-md-9">
+                                    <img width="400" th:src="@{${violate.image}}" alt="" class="img-fluid"/>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Main Content End -->
+</div>
+<!--**********************************
+    Main wrapper end
+***********************************-->
+
+<!--**********************************
+    Scripts
+***********************************-->
+<script src="/plugins/common/common.min.js"></script>
+<script src="/js/custom.min.js"></script>
+<script src="/js/settings.js"></script>
+<script src="/js/gleek.js"></script>
+<script src="/js/styleSwitcher.js"></script>
+</body>
+</html>

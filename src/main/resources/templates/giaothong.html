@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-name" content="quixlab"/>
+
+    <title>GT Management Dashboard</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+    <link href="/plugins/pg-calendar/css/pignose.calendar.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/plugins/chartist/css/chartist.min.css">
+    <link rel="stylesheet" href="/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+<div id="main-wrapper">
+    <div class="nav-header">
+        <div class="brand-logo"></div>
+    </div>
+    <div class="header">
+        <div class="header-content clearfix">
+            <div class="nav-control">
+                <div class="hamburger">
+                    <span class="toggle-icon"><i class="icon-menu"></i></span>
+                </div>
+            </div>
+            <div class="header-left">
+                <div class="input-group icons">
+                    <div class="input-group-prepend">
+            <span class="input-group-text bg-transparent border-0 pr-2 pr-sm-3" id="basic-addon1"><i
+                    class="mdi mdi-magnify"></i></span>
+                    </div>
+                    <form action="/students" method="get" class="row">
+                        <input name="search" type="search" class="form-control col-8" placeholder="Search Students"
+                               aria-label="Search Students">
+                        <button class="btn-primary col-4" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+            <div class="header-right">
+                <ul class="clearfix">
+                    <li class="icons dropdown d-none d-md-flex">
+                        <a href="javascript:void(0)" class="log-user" data-toggle="dropdown">
+                            <span th:text="${session.account.username}"></span> <i class="fa fa-angle-down f-s-14"
+                                                                                   aria-hidden="true"></i>
+                        </a>
+                    </li>
+                    <li class="icons dropdown">
+                        <div class="user-img c-pointer position-relative" data-toggle="dropdown">
+                            <span class="activity active"></span>
+                            <img th:src="@{${session.account.avatar}}" height="40" width="40" alt="">
+                        </div>
+                        <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
+                            <div class="dropdown-content-body">
+                                <ul>
+                                    <li><a href="app-profile.html"><i class="icon-user"></i> <span>Profile</span></a>
+                                    </li>
+                                    <li><a href="javascript:void(0)"><i
+                                            class="icon-envelope-open"></i><span>Inbox</span></a></li>
+                                    <hr class="my-2">
+                                    <li><a href="page-lock.html"><i class="icon-lock"></i> <span>Lock Screen</span></a>
+                                    </li>
+                                    <li><a href="/login"><i class="icon-key"></i> <span>Logout</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="nk-sidebar">
+        <div class="nk-nav-scroll">
+            <ul class="metismenu" id="menu">
+                <li class="nav-label">Dashboard CSGT</li>
+                <li>
+                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+                        <i class="icon-user menu-icon"></i><span class="nav-text">Cart</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        <li><a href="/gt">Tất cả</a></li>
+                        <li><a href="/gt?category=oto">Ô tô</a></li>
+                        <li><a href="/gt?category=xemay">Xe máy</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="content-body">
+        <div class="container emp-profile" style="background: white; margin: 35px">
+            <div class="card-body">
+                <h1>Danh sách các xe</h1>
+                <div class="tab-content" id="myTabContent">
+                    <div>
+                        <br>
+                        <table class="table table-xs mb-0">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>License Plate</th>
+                                <th>Details</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="car : ${cars}">
+                                <td th:text="${car.id}">1</td>
+                                <td th:text="${car.licensePlate}">License Plate</td>
+                                <td><a style="color: #1b7e5a" th:href="@{/gt/{id}(id=${car.id})}">View Details</a></td>
+                                <td>
+                                    <!-- Inside the table body -->
+                                    <a href="javascript:void(0)" class="btn btn-primary edit-car"
+                                       th:data-id="${car.id}"
+                                       th:data-license-plate="${car.licensePlate}"
+                                       th:data-category="${car.category}"
+                                       th:data-address="${car.address}"
+                                       th:data-image="${car.image}"
+                                       th:data-status="${car.status}"
+                                       th:data-date="${car.date}"
+                                    >Edit</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="copyright">
+            <p>Copyright &copy; Designed & Developed by <a href="https://themeforest.net/user/quixlab">Quixlab</a> 2018
+            </p>
+        </div>
+    </div>
+</div>
+
+<!--Modal Edit-->
+<div class="modal" id="modalEdit">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Car</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editCarForm" method="post" action="/gt/car/edit">
+                    <input type="hidden" name="id" id="editCarId">
+                    <div class="form-group">
+                        <label for="editCarLicensePlate">License Plate:</label>
+                        <input type="text" class="form-control" name="licensePlate" id="editCarLicensePlate">
+                    </div>
+                    <div class="form-group">
+                        <label for="editCarCategory">Category:</label>
+                        <input type="text" class="form-control" name="category" id="editCarCategory">
+                    </div>
+                    <div class="form-group">
+                        <label for="editCarAddress">Address:</label>
+                        <textarea class="form-control" name="address" id="editCarAddress"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCarImage">Image:</label>
+                        <input type="text" class="form-control" name="image" id="editCarImage">
+                    </div>
+                    <div class="form-group">
+                        <label for="editCarStatus">Status:</label>
+                        <input type="text" class="form-control" name="status" id="editCarStatus">
+                    </div>
+                    <div class="form-group">
+                        <label for="editCarDate">Date:</label>
+                        <input type="date" class="form-control" name="date" id="editCarDate">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--**********************************
+    Scripts
+***********************************-->
+<script src="/plugins/common/common.min.js"></script>
+<script src="/js/custom.min.js"></script>
+<script src="/js/settings.js"></script>
+<script src="/js/gleek.js"></script>
+<script src="/js/styleSwitcher.js"></script>
+
+<!-- Chartjs -->
+<script src="/plugins/chart.js/Chart.bundle.min.js"></script>
+<!-- Circle progress -->
+<script src="/plugins/circle-progress/circle-progress.min.js"></script>
+<!-- Datamap -->
+<script src="/plugins/d3v3/index.js"></script>
+<script src="/plugins/topojson/topojson.min.js"></script>
+<script src="/plugins/datamaps/datamaps.world.min.js"></script>
+<!-- Morrisjs -->
+<script src="/plugins/raphael/raphael.min.js"></script>
+<script src="/plugins/morris/morris.min.js"></script>
+<!-- Pignose Calender -->
+<script src="/plugins/moment/moment.min.js"></script>
+<script src="/plugins/pg-calendar/js/pignose.calendar.min.js"></script>
+<!-- ChartistJS -->
+<script src="/plugins/chartist/js/chartist.min.js"></script>
+<script src="/plugins/chartist-plugin-tooltips/js/chartist-plugin-tooltip.min.js"></script>
+
+<script src="/js/dashboard/dashboard-1.js"></script>
+
+</body>
+<!-- At the end of your HTML body or in a separate script file -->
+<!-- At the end of your HTML body or in a separate script file -->
+<script>
+    // Wait for the document to be ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add event listener to all edit-car buttons
+        document.querySelectorAll('.edit-car').forEach(function(button) {
+            button.addEventListener('click', function() {
+                // Retrieve data from data-* attributes
+                var id = this.getAttribute('data-id');
+                var licensePlate = this.getAttribute('data-license-plate');
+                var category = this.getAttribute('data-category');
+                var address = this.getAttribute('data-address');
+                var image = this.getAttribute('data-image');
+                var status = this.getAttribute('data-status');
+                var date = this.getAttribute('data-date');
+
+                // Populate modal with retrieved data
+                document.getElementById('editCarId').value = id;
+                document.getElementById('editCarLicensePlate').value = licensePlate;
+                document.getElementById('editCarCategory').value = category;
+                document.getElementById('editCarAddress').value = address;
+                document.getElementById('editCarImage').value = image;
+                document.getElementById('editCarStatus').value = status;
+                document.getElementById('editCarDate').value = formatDate(date); // Ensure to format date appropriately
+
+                // Show the modal
+                $('#modalEdit').modal('show');
+            });
+        });
+
+        // Add event listener to all delete-car buttons
+        document.querySelectorAll('.delete-car').forEach(function(button) {
+            button.addEventListener('click', function() {
+                // Retrieve data from data-* attributes
+                var id = this.getAttribute('data-id');
+                var licensePlate = this.getAttribute('data-license-plate');
+
+                // Populate modal with delete confirmation message
+                document.getElementById('deleteCarId').value = id;
+                document.getElementById('deleteCarLicensePlate').textContent = licensePlate;
+
+                // Show the delete confirmation modal
+                $('#modalDelete').modal('show');
+            });
+        });
+    });
+
+    // Function to format date as 'YYYY-MM-DD' for input type date
+    function formatDate(date) {
+        const d = new Date(date);
+        let month = '' + (d.getMonth() + 1);
+        let day = '' + d.getDate();
+        const year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+</script>
+
+
+</html>
