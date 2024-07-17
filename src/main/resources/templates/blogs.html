@@ -12,13 +12,26 @@
             font-family: Arial, sans-serif;
         }
 
-        .blog-card {
+        .navbar {
             margin-bottom: 30px;
+        }
+
+        .blog-card {
+            transition: transform 0.2s;
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
         }
 
         .blog-card img {
             max-height: 200px;
             object-fit: cover;
+            border-bottom: 2px solid #007bff;
         }
 
         .blog-card-title {
@@ -39,16 +52,38 @@
         .header {
             background-color: #343a40;
             color: #fff;
-            padding: 20px 0;
+            padding: 100px 0;
             text-align: center;
+            height: 500px;
+            margin-top: -100px;
         }
 
         .header h1 {
+            color: red;
             margin: 0;
+            font-size: 3rem;
         }
 
         .pagination {
             justify-content: center;
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: #fff;
+            padding: 100px 0;
+            text-align: center;
+            margin-top: 40px;
+            height: 200px;
+        }
+
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -62,10 +97,10 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="/">Tra cứu <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="/blogs">Tin tức</a>
             </li>
             <li class="nav-item">
@@ -75,8 +110,8 @@
     </div>
 </nav>
 
-<div class="header">
-    <h1>Blog Homepage</h1>
+<div class="header" style="background-image: url('https://png.pngtree.com/background/20210711/original/pngtree-green-travel-traffic-safety-warning-banner-picture-image_1130740.jpg')">
+    <h1>TIN TỨC MỚI NHẤT</h1>
 </div>
 
 <div class="container mt-5">

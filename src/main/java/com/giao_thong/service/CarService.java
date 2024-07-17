@@ -19,6 +19,10 @@ public class CarService {
         return (List<Car>) iCarRepo.findAll();
     }
 
+    public void deleteById(int id){
+        iCarRepo.deleteById(id);
+    }
+
     public List<Car> getAllByCategory(String category) {
         return iCarRepo.findAllByCategory(category);
     }

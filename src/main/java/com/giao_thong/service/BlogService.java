@@ -33,4 +33,7 @@ public class BlogService {
         return iBlogRepo.findById(id).get();
     }
 
+    public void deleteById(int id){
+        iBlogRepo.deleteById(id);
+    }
 }

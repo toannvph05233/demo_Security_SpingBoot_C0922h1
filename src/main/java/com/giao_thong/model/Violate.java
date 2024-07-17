@@ -13,6 +13,7 @@ public class Violate {
     private int id;
     @Column(length = 100000)
     private String behavior;
+    private long price;
     private String status;
     @Column(length = 100000)
     private String address;

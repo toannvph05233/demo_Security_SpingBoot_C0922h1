@@ -3,17 +3,18 @@ package com.giao_thong.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
-public class Comment {
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String content;
-    private String name;
-    private Date date;
+    private LocalDateTime time;
+    private long total;
     @ManyToOne
-    private Blog blog;
+    private Car car;
+    @ManyToOne
+    private Violate violate;
 }

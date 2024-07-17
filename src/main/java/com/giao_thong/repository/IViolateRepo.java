@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface IViolateRepo extends PagingAndSortingRepository<Violate, Integer> {
     List<Violate> findAllByCar_Id(Integer idCar);
+    List<Violate> findAllByAccount_Id(Integer id);
 }

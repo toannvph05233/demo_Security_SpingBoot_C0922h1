@@ -28,6 +28,12 @@ public class AccountService implements UserDetailsService {
         return account;
     }
 
+    public void save(Account account){
+        iAccountRepo.save(account);
+    }
+    public void deleteById(int id){
+        iAccountRepo.deleteById(id);
+    }
     public List<Account> findAllByRolesId( int idRole){
         return iAccountRepo.findAllByRolesId(idRole);
     }

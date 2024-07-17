@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css">
     <!-- Custom Stylesheet -->
     <link href="/css/style.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
         .emp-profile {
             padding: 3%;
@@ -196,6 +197,10 @@
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
                                aria-controls="home" aria-selected="true">Thông tin</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="payment-tab" data-toggle="tab" href="#payment" role="tab"
+                               aria-controls="payment" aria-selected="false">Lịch sử đóng phạt</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -223,6 +228,54 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tab-pane fade show" id="payment" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <h3 style="color: red">Lịch sử đóng phạt</h3>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10">
+                                <div class="tab-content profile-tab">
+                                    <hr>
+                                    <div th:each="payment : ${payments}">
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <strong>Lỗi vi phạm:</strong>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <p th:text="${payment.violate.getBehavior()}"></p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <strong>Thời gian:</strong>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <p th:text="${payment.time}"></p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <strong>Số tiền:</strong>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <p style="color: red" th:text="${payment.total} + ' VND'"></p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <strong>Đội CAGT:</strong>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <p style="color: #0e4cfd" th:text="${payment.violate.account.getDetection()}"></p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -249,6 +302,14 @@
                                 </div>
                                 <div class="col-md-9">
                                     <p style="color: red" th:text="${violate.behavior}"></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <strong>Tiền Phạt:</strong>
+                                </div>
+                                <div class="col-md-9">
+                                    <p style="color: red" th:text="${violate.price} + ' VND'"></p>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -291,6 +352,9 @@
                                     <img width="400" th:src="@{${violate.image}}" alt="" class="img-fluid"/>
                                 </div>
                             </div>
+                            <div th:if="${violate.status.equals('chưa xử lý')}">
+                                <button th:attr="onclick=|payment(${car.getId()}, ${violate.price},  ${violate.id})|" class="btn btn-success">Đóng Phạt</button>
+                            </div>
                             <hr>
                         </div>
                     </div>
@@ -301,6 +365,8 @@
 
     </div>
     <!-- Main Content End -->
+    <a href="/" type="button" class="btn btn-primary" style="position: fixed; right: 200px; top: 100px; padding: 20px">Quay lại trang chủ</a>
+
 </div>
 <!--**********************************
     Main wrapper end
@@ -316,3 +382,19 @@
 <script src="/js/styleSwitcher.js"></script>
 </body>
 </html>
+
+<script>
+    function payment(idCart,total,violateId) {
+        $.ajax({
+            type: "GET",
+            url: `http://localhost:8080/pay/vnpay?idCart=${idCart}&&total=${total}&&violateId=${violateId}`,
+            success: function (data) {
+                location.href = data.url;
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        })
+    }
+getAll();
+</script>

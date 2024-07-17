@@ -40,6 +40,7 @@ public class ViolateController {
         // Parse the String to LocalDateTime
         LocalDateTime dateTime = LocalDateTime.parse(timeV, formatter);
         violate.setTime(dateTime);
+        violate.setStatus("chưa xử lý");
         Car car = carService.findById(violateCarId);
         violate.setCar(car);
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

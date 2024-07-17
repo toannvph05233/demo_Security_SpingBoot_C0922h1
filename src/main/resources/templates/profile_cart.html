@@ -335,6 +335,14 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-3">
+                                    <strong>Price:</strong>
+                                </div>
+                                <div class="col-md-9">
+                                    <p th:text="${violate.price} + ' VND'"></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
                                     <strong>Address:</strong>
                                 </div>
                                 <div class="col-md-9">
@@ -357,7 +365,7 @@
                                         th:data-id="${violate.id}"
                                         th:data-time="${violate.time}"
                                         th:data-behavior="${violate.behavior}"
-                                        th:data-status="${violate.status}"
+                                        th:data-price="${violate.price}"
                                         th:data-address="${violate.address}"
                                         th:data-image="${violate.image}">Edit Violate</button>
                             </div>
@@ -394,8 +402,8 @@
                         <input type="text" class="form-control" id="violateBehavior" name="behavior" required>
                     </div>
                     <div class="form-group">
-                        <label for="violateStatus">Status:</label>
-                        <input type="text" class="form-control" id="violateStatus" name="status" required>
+                        <label for="violateBehavior">Price:</label>
+                        <input type="number" min="1" class="form-control" id="price" name="price" required>
                     </div>
                     <div class="form-group">
                         <label for="violateAddress">Address:</label>
@@ -440,8 +448,8 @@
                         <input type="text" class="form-control" id="editViolateBehavior" name="behavior" required>
                     </div>
                     <div class="form-group">
-                        <label for="editViolateStatus">Status:</label>
-                        <input type="text" class="form-control" id="editViolateStatus" name="status" required>
+                        <label for="editViolateBehavior">Price:</label>
+                        <input type="number" class="form-control" id="editPrice" name="price" required>
                     </div>
                     <div class="form-group">
                         <label for="editViolateAddress">Address:</label>
@@ -511,7 +519,6 @@
         var violateCarId = document.getElementById('violateCarId');
         var violateTime = document.getElementById('violateTime');
         var violateBehavior = document.getElementById('violateBehavior');
-        var violateStatus = document.getElementById('violateStatus');
         var violateAddress = document.getElementById('violateAddress');
         var violateImage = document.getElementById('violateImage');
 
@@ -522,19 +529,19 @@
         var editViolateId = document.getElementById('editViolateId');
         var editViolateTime = document.getElementById('editViolateTime');
         var editViolateBehavior = document.getElementById('editViolateBehavior');
-        var editViolateStatus = document.getElementById('editViolateStatus');
         var editViolateAddress = document.getElementById('editViolateAddress');
         var editViolateImage = document.getElementById('editViolateImage');
+        var editPrice = document.getElementById('editPrice');
 
         // Function to fill data in Edit Violate modal
-        function fillEditViolateModal(id, time, behavior, status, address, image,cartId) {
+        function fillEditViolateModal(id, time, behavior, address, image,cartId, price) {
             editViolateId.value = id;
             violateCarIdE.value = cartId;
             editViolateTime.value = time;
             editViolateBehavior.value = behavior;
-            editViolateStatus.value = status;
             editViolateAddress.value = address;
             editViolateImage.value = image;
+            editPrice.value = price;
             modalEditViolate.modal('show');
         }
 
@@ -544,10 +551,10 @@
                 var id = this.getAttribute('data-id');
                 var time = this.getAttribute('data-time');
                 var behavior = this.getAttribute('data-behavior');
-                var status = this.getAttribute('data-status');
                 var address = this.getAttribute('data-address');
                 var image = this.getAttribute('data-image');
-                fillEditViolateModal(id, time, behavior, status, address, image, idC);
+                var price = this.getAttribute('data-price');
+                fillEditViolateModal(id, time, behavior, address, image, idC, price);
             });
         });
 
@@ -567,10 +574,10 @@
             var id = firstViolate.getAttribute('data-id');
             var time = firstViolate.getAttribute('data-time');
             var behavior = firstViolate.getAttribute('data-behavior');
-            var status = firstViolate.getAttribute('data-status');
             var address = firstViolate.getAttribute('data-address');
             var image = firstViolate.getAttribute('data-image');
-            fillEditViolateModal(id, time, behavior, status, address, image);
+            var price = firstViolate.getAttribute('data-price');
+            fillEditViolateModal(id, time, behavior, address, image, idC, price);
         });
 
         // Add event listener to "Edit" buttons for each violate
