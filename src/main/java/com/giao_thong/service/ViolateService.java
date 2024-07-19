@@ -15,6 +15,9 @@ public class ViolateService {
     public List<Violate> findAllByCar_Id(Integer idCar) {
         return iViolateRepo.findAllByCar_Id(idCar);
     }
+    public Violate findById(Integer id) {
+        return iViolateRepo.findById(id).get();
+    }
 
     public List<Violate> getAll() {
         return (List<Violate>) iViolateRepo.findAll();

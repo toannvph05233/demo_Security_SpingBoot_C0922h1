@@ -1,5 +1,7 @@
 package com.giao_thong.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.giao_thong.model.*;
 import com.giao_thong.repository.ICategoryRepo;
 import com.giao_thong.repository.ICommentRepo;
@@ -18,6 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -46,7 +50,7 @@ public class AdminController {
     ICommentRepo iCommentRepo;
 
     @GetMapping
-    public ModelAndView admin() {
+    public ModelAndView admin() throws JsonProcessingException {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Account account = accountService.findByUsername(userDetails.getUsername());
         session.setAttribute("account", account);
@@ -55,25 +59,31 @@ public class AdminController {
         List<Blog> blogs = blogService.getAll();
         List<Car> cars = carService.getAll();
         List<Violate> violates = (List<Violate>) violateRepo.findAll();
-        List<Violate> violateSuccess = new ArrayList<>();
-        List<Violate> violateNotSuccess = new ArrayList<>();
-        for (Violate v :violates) {
-            if (v.getStatus().equals("chưa xử lý")){
-                violateNotSuccess.add(v);
-            }else {
-                violateSuccess.add(v);
-            }
-        }
 
-        modelAndView.addObject("countV", violates.size());
-        modelAndView.addObject("countVDone", violateSuccess.size());
-        modelAndView.addObject("countVNotDone", violateNotSuccess.size());
+        Map<String, Long> violationsPerMonth = violates.stream()
+                .collect(Collectors.groupingBy(v -> v.getTime().getMonth().toString(), Collectors.counting()));
+
+        long countV = violates.size();
+        long countVDone = violates.stream().filter(v -> v.getStatus().equals("đã xử lý")).count();
+        long countVNotDone = violates.stream().filter(v -> v.getStatus().equals("chưa xử lý")).count();
+
+        Map<String, Long> violationsByVehicleType = violates.stream()
+                .collect(Collectors.groupingBy(v -> v.getCar().getCategory(), Collectors.counting()));
+
+        modelAndView.addObject("countV", countV);
+        modelAndView.addObject("countVDone", countVDone);
+        modelAndView.addObject("countVNotDone", countVNotDone);
         modelAndView.addObject("accounts", accounts);
         modelAndView.addObject("categories", categoryRepo.findAll());
         modelAndView.addObject("blogs", blogs);
         modelAndView.addObject("cars", cars);
+        modelAndView.addObject("violationsPerMonth", new ObjectMapper().writeValueAsString(violationsPerMonth));
+        modelAndView.addObject("violationsByVehicleType", new ObjectMapper().writeValueAsString(violationsByVehicleType));
+
         return modelAndView;
     }
+
+
 
     @GetMapping("/chat")
     public String chat() {

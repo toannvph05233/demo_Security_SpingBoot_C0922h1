@@ -97,7 +97,15 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="bieudo-tab" data-toggle="tab" href="#bieudo" role="tab"
-                       aria-controls="bieudo" aria-selected="false">Thống kê</a>
+                       aria-controls="bieudo" aria-selected="false">Thống kê vi phạm</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="bieudo2-tab" data-toggle="tab" href="#bieudo2" role="tab"
+                       aria-controls="bieudo2" aria-selected="false">Thống kê theo tháng</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="bieudo3-tab" data-toggle="tab" href="#bieudo3" role="tab"
+                       aria-controls="bieudo3" aria-selected="false">Thống kê loại xe</a>
                 </li>
                 <li class="nav-item">
                     <a href="/admin/chat" type="button" class="btn btn-primary" style="margin: 20px">Chat</a>
@@ -235,6 +243,14 @@
                                 <div class="tab-pane fade" id="bieudo" role="tabpanel" aria-labelledby="bieudo-tab">
                                     <h3>Thống Kê</h3>
                                     <canvas id="violateChart" width="400" height="200"></canvas>
+                                </div>
+                                <div class="tab-pane fade" id="bieudo2" role="tabpanel" aria-labelledby="bieudo2-tab">
+                                    <h3>Thống Kê Vi Phạm Theo Tháng</h3>
+                                    <canvas id="monthlyViolateChart" width="400" height="200"></canvas>
+                                </div>
+                                <div class="tab-pane fade" id="bieudo3" role="tabpanel" aria-labelledby="bieudo3-tab">
+                                    <h3>Thống Kê Vi Phạm Theo Loại Xe</h3>
+                                    <canvas id="vehicleTypeChart" width="400" height="200"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -545,7 +561,10 @@
 <div id="data-container"
      th:data-countv="${countV}"
      th:data-countvdone="${countVDone}"
-     th:data-countvnotdone="${countVNotDone}"></div>
+     th:data-countvnotdone="${countVNotDone}"
+     th:data-violations-per-month="${violationsPerMonth}"
+     th:data-violations-by-vehicle-type="${violationsByVehicleType}">
+</div>
 
 <!-- Edit Car Modal -->
 <div class="modal fade" id="editCarModal" tabindex="-1" role="dialog" aria-labelledby="editCarModalLabel"
@@ -601,38 +620,38 @@
 <div class="modal fade" id="detailCarModal" tabindex="-1" role="dialog" aria-labelledby="detailCarModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detailCarModalLabel">Detail Car</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailCarModalLabel">Detail Car</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <h5 id="detailLicensePlate"></h5>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <h5 id="detailLicensePlate"></h5>
-                    </div>
-                    <div class="form-group">
-                        <h5 id="detailCategoryD"></h5>
-                    </div>
-                    <div class="form-group">
-                        <h5 id="detailAddressD"></h5>
-                    </div>
-                    <div class="form-group">
-                        <img id="detailImage" width="200">
-                    </div>
-                    <div class="form-group">
-                        <h5 id="detailStatus"></h5>
+                <div class="form-group">
+                    <h5 id="detailCategoryD"></h5>
+                </div>
+                <div class="form-group">
+                    <h5 id="detailAddressD"></h5>
+                </div>
+                <div class="form-group">
+                    <img id="detailImage" width="200">
+                </div>
+                <div class="form-group">
+                    <h5 id="detailStatus"></h5>
 
-                    </div>
-                    <div class="form-group">
-                        <h5 id="detailDate"></h5>
-                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <div class="form-group">
+                    <h5 id="detailDate"></h5>
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -693,12 +712,15 @@
         var countV = parseInt(dataContainer.getAttribute('data-countv')) || 0;
         var countVDone = parseInt(dataContainer.getAttribute('data-countvdone')) || 0;
         var countVNotDone = parseInt(dataContainer.getAttribute('data-countvnotdone')) || 0;
+        var violationsPerMonth = JSON.parse(dataContainer.getAttribute('data-violations-per-month'));
+        var violationsByVehicleType = JSON.parse(dataContainer.getAttribute('data-violations-by-vehicle-type'));
+
 
         var ctx = document.getElementById('violateChart').getContext('2d');
         var violateChart = new Chart(ctx, {
             type: 'bar', // Change this to 'pie' if you prefer a pie chart
             data: {
-                labels: ['Tổng số vi phạm', 'Đã xử lý', 'Chưa xử lý'],
+                labels: ['Tổng số vi phạm', 'Đã đóng phạt', 'Chưa đóng phạt'],
                 datasets: [{
                     label: 'Số lượng',
                     data: [countV, countVDone, countVNotDone],
@@ -723,9 +745,59 @@
                 }
             }
         });
+
+        // Prepare data for the monthly violations chart
+        var monthLabels = Object.keys(violationsPerMonth);
+        var monthData = Object.values(violationsPerMonth);
+
+        var ctx2 = document.getElementById('monthlyViolateChart').getContext('2d');
+        var monthlyViolateChart = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: monthLabels,
+                datasets: [{
+                    label: 'Số lượng vi phạm',
+                    data: monthData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        // Vehicle type violations chart
+        var vehicleTypeLabels = Object.keys(violationsByVehicleType);
+        var vehicleTypeData = Object.values(violationsByVehicleType);
+
+        var ctx3 = document.getElementById('vehicleTypeChart').getContext('2d');
+        var vehicleTypeChart = new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: vehicleTypeLabels,
+                datasets: [{
+                    label: 'Số lượng vi phạm',
+                    data: vehicleTypeData,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
     });
 </script>
-
 
 
 <!--**********************************

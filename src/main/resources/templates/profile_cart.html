@@ -106,6 +106,12 @@
             font-weight: 600;
             color: #0062cc;
         }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+        }
     </style>
 
 </head>
@@ -302,7 +308,9 @@
             <div class="row">
                 <h3 style="color: red">Violation List</h3>
 
-                <button style="margin-left: 50px" type="button" class="btn btn-primary mb-3" id="btnCreateViolate">Create Violate</button>
+                <button style="margin-left: 50px" type="button" class="btn btn-primary mb-3" id="btnCreateViolate">
+                    Create Violate
+                </button>
 
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
@@ -361,13 +369,15 @@
                             <div>
                                 <a href="javascript:void(0)" class="btn btn-danger delete-car"
                                    th:data-id="${violate.id}">Delete</a>
-                                <button style="margin-top: 15px" type="button" class="btn btn-secondary mb-3 ml-3 edit-violate-btn"
+                                <button style="margin-top: 15px" type="button"
+                                        class="btn btn-secondary mb-3 ml-3 edit-violate-btn"
                                         th:data-id="${violate.id}"
                                         th:data-time="${violate.time}"
                                         th:data-behavior="${violate.behavior}"
                                         th:data-price="${violate.price}"
                                         th:data-address="${violate.address}"
-                                        th:data-image="${violate.image}">Edit Violate</button>
+                                        th:data-image="${violate.image}">Edit Violate
+                                </button>
                             </div>
                             <hr>
                         </div>
@@ -391,7 +401,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="createViolateForm" action="/violates/create" method="post">
+                <form id="createViolateForm" action="/violates/create" method="post" enctype="multipart/form-data">
                     <input type="hidden" id="violateCarId" name="violateCarId" value="">
                     <div class="form-group">
                         <label for="violateTime">Time:</label>
@@ -410,8 +420,12 @@
                         <textarea class="form-control" id="violateAddress" name="address" rows="3" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="violateImage">Image URL:</label>
-                        <input type="text" class="form-control" id="violateImage" name="image" required>
+                        <label for="violateImage">Image:</label>
+                        <input type="file" class="form-control" id="violateImage" name="imgFile" required>
+                    </div>
+
+                    <div id="imagePreview">
+                        <!-- Placeholder for the image preview -->
                     </div>
                     <button type="submit" class="btn btn-primary">Create Violate</button>
                 </form>
@@ -436,7 +450,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="editViolateForm" action="/violates/create" method="post">
+                <form id="editViolateForm" action="/violates/create" method="post" enctype="multipart/form-data">
                     <input type="hidden" id="editViolateId" name="id" value="">
                     <input type="hidden" id="violateCarIdE" name="violateCarId" value="">
                     <div class="form-group">
@@ -453,12 +467,23 @@
                     </div>
                     <div class="form-group">
                         <label for="editViolateAddress">Address:</label>
-                        <textarea class="form-control" id="editViolateAddress" name="address" rows="3" required></textarea>
+                        <textarea class="form-control" id="editViolateAddress" name="address" rows="3"
+                                  required></textarea>
                     </div>
+                    <!--                    <div class="form-group">-->
+                    <!--                        <label for="editViolateImage">Image URL:</label>-->
+                    <!--                        <input type="text" class="form-control" id="editViolateImage" name="image" required>-->
+                    <!--                    </div>-->
+
                     <div class="form-group">
-                        <label for="editViolateImage">Image URL:</label>
-                        <input type="text" class="form-control" id="editViolateImage" name="image" required>
+                        <label for="violateImage">Image:</label>
+                        <input type="file" class="form-control" id="violateImageE" name="imgFile">
                     </div>
+
+                    <div>
+                        <img id="imagePreviewE" width="200" style="margin: 10px">
+                    </div>
+
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </form>
             </div>
@@ -499,14 +524,14 @@
 <script src="/js/gleek.js"></script>
 <script src="/js/styleSwitcher.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         var currentUrl = window.location.href;
         var urlParts = currentUrl.split('/');
         var idC = urlParts[urlParts.length - 1];
 
         // Add event listener to all delete-car buttons
-        document.querySelectorAll('.delete-car').forEach(function(button) {
-            button.addEventListener('click', function() {
+        document.querySelectorAll('.delete-car').forEach(function (button) {
+            button.addEventListener('click', function () {
                 document.getElementById('deleteId').value = this.getAttribute('data-id');
                 document.getElementById('idCart').value = idC;
                 $('#modalDelete').modal('show');
@@ -530,24 +555,24 @@
         var editViolateTime = document.getElementById('editViolateTime');
         var editViolateBehavior = document.getElementById('editViolateBehavior');
         var editViolateAddress = document.getElementById('editViolateAddress');
-        var editViolateImage = document.getElementById('editViolateImage');
+        var imagePreviewE = document.getElementById('imagePreviewE');
         var editPrice = document.getElementById('editPrice');
 
         // Function to fill data in Edit Violate modal
-        function fillEditViolateModal(id, time, behavior, address, image,cartId, price) {
+        function fillEditViolateModal(id, time, behavior, address, image, cartId, price) {
             editViolateId.value = id;
             violateCarIdE.value = cartId;
             editViolateTime.value = time;
             editViolateBehavior.value = behavior;
             editViolateAddress.value = address;
-            editViolateImage.value = image;
+            imagePreviewE.src = image;
             editPrice.value = price;
             modalEditViolate.modal('show');
         }
 
         // Add event listener to "Edit Violate" buttons
-        document.querySelectorAll('.edit-violate-btn').forEach(function(button) {
-            button.addEventListener('click', function() {
+        document.querySelectorAll('.edit-violate-btn').forEach(function (button) {
+            button.addEventListener('click', function () {
                 var id = this.getAttribute('data-id');
                 var time = this.getAttribute('data-time');
                 var behavior = this.getAttribute('data-behavior');
@@ -561,14 +586,14 @@
 
         // Event listener for "Create Violate" button click
         var btnCreateViolate = document.getElementById('btnCreateViolate');
-        btnCreateViolate.addEventListener('click', function() {
+        btnCreateViolate.addEventListener('click', function () {
             violateCarId.value = idC;
             modalCreateViolate.modal('show');
         });
 
         // Event listener for "Edit Violate" button click
         var btnEditViolate = document.getElementById('btnEditViolate');
-        btnEditViolate.addEventListener('click', function() {
+        btnEditViolate.addEventListener('click', function () {
             // Example: Fill with first violate's data
             var firstViolate = document.querySelector('.edit-violate-btn');
             var id = firstViolate.getAttribute('data-id');
@@ -581,19 +606,48 @@
         });
 
         // Add event listener to "Edit" buttons for each violate
-        document.querySelectorAll('.edit-violate-btn').forEach(function(button) {
-            button.addEventListener('click', function() {
+        document.querySelectorAll('.edit-violate-btn').forEach(function (button) {
+            button.addEventListener('click', function () {
                 fillEditViolateModal(/* pass parameters as needed */);
             });
         });
 
+        var input = document.getElementById('violateImage');
+        var inputE = document.getElementById('violateImageE');
+        inputE.addEventListener('change', function () {
+            var file = inputE.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    var imagePreview = document.getElementById('imagePreviewE');
+                    imagePreview.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+        input.addEventListener('change', function () {
+            var file = input.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    var imagePreview = document.getElementById('imagePreview');
+                    imagePreview.innerHTML = '<img src="' + e.target.result + '" class="preview-image" />';
+                };
+
+                reader.readAsDataURL(file);
+            }
 
 
-
-
+        });
     });
-</script>
 
+
+</script>
 
 
 </body>
